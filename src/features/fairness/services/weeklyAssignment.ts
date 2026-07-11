@@ -4,6 +4,12 @@ import { assignPoolTasks } from "../logic/assignPool";
 import { getNextUnplannedWeekStart, getWeekEnd } from "../logic/week";
 import type { AssignmentPreview } from "../types";
 
+export async function fetchPlannedWeekStartDates(): Promise<string[]> {
+  const { data, error } = await supabase.from("weekly_assignments").select("week_start_date");
+  if (error) throw error;
+  return (data ?? []).map((week) => week.week_start_date);
+}
+
 export async function computeWeeklyAssignmentPreview(
   profileIds: [string, string]
 ): Promise<AssignmentPreview> {

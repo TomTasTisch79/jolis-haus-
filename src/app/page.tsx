@@ -5,6 +5,7 @@ import { OnboardingScreen } from "@/features/auth/components/OnboardingScreen";
 import { useCurrentProfileId } from "@/features/auth/hooks/useCurrentProfileId";
 import { Leaderboard } from "@/features/gamification/components/Leaderboard";
 import { AchievementsList } from "@/features/gamification/components/AchievementsList";
+import { ReminderBanner } from "@/features/notifications/components/ReminderBanner";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
     <main className={styles.page}>
       <h1 className={styles.title}>Jolis Haus</h1>
 
+      <ReminderBanner profileId={profileId} />
       <Leaderboard />
       <AchievementsList profileId={profileId} />
 
