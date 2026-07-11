@@ -1,0 +1,125 @@
+.card {
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headerLabel {
+  font: var(--font-footnote);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.navButton {
+  border: none;
+  background: var(--color-surface-secondary);
+  color: var(--color-text-primary);
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  font: var(--font-headline);
+  cursor: pointer;
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-1);
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-1);
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.today {
+  box-shadow: inset 0 0 0 1.5px var(--color-accent);
+}
+
+.selected {
+  background: var(--color-surface-secondary);
+}
+
+.weekdayLabel {
+  font: var(--font-caption2);
+  color: var(--color-text-secondary);
+}
+
+.dayNumber {
+  font: var(--font-footnote);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.dots {
+  display: flex;
+  gap: 2px;
+  height: 6px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  border-top: 1px solid var(--color-separator);
+  padding-top: var(--space-3);
+}
+
+.taskRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.taskDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.taskTitle {
+  flex: 1;
+  font: var(--font-footnote);
+  color: var(--color-text-primary);
+}
+
+.taskTitleDone {
+  flex: 1;
+  font: var(--font-footnote);
+  color: var(--color-text-secondary);
+  text-decoration: line-through;
+}
+
+.taskProfile {
+  font: var(--font-caption1);
+  color: var(--color-text-secondary);
+}
+
+.empty {
+  font: var(--font-footnote);
+  color: var(--color-text-secondary);
+}

@@ -24,3 +24,8 @@
   color: var(--color-accent);
   font: var(--font-body);
 }
+
+.linkMuted {
+  color: var(--color-text-tertiary);
+  font: var(--font-body);
+}
