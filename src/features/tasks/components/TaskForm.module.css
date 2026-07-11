@@ -1,0 +1,131 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font: var(--font-footnote);
+  color: var(--color-text-secondary);
+}
+
+.input,
+.textarea,
+.select {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-separator);
+  background: var(--color-surface-secondary);
+  font: var(--font-body);
+  color: var(--color-text-primary);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.segmented {
+  display: flex;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-separator);
+}
+
+.segmentButton {
+  flex: 1;
+  padding: var(--space-2);
+  border: none;
+  background: var(--color-surface-secondary);
+  color: var(--color-text-primary);
+  font: var(--font-footnote);
+  cursor: pointer;
+}
+
+.segmentButtonSelected {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+.weekdayRow {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.weekdayButton {
+  flex: 1;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-separator);
+  background: var(--color-surface-secondary);
+  color: var(--color-text-primary);
+  font: var(--font-caption1);
+  cursor: pointer;
+}
+
+.weekdayButtonSelected {
+  background: var(--color-accent);
+  color: #ffffff;
+  border-color: var(--color-accent);
+}
+
+.intervalRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.intervalInput {
+  width: 60px;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-separator);
+  background: var(--color-surface-secondary);
+  text-align: center;
+}
+
+.intervalLabel {
+  font: var(--font-footnote);
+  color: var(--color-text-secondary);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.cancelButton {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font: var(--font-callout);
+  cursor: pointer;
+}
+
+.saveButton {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--color-accent);
+  color: #ffffff;
+  font: var(--font-callout);
+  cursor: pointer;
+}
+
+.saveButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

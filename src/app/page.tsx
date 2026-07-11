@@ -20,6 +20,9 @@ export default function Home() {
     <main className={styles.page}>
       <h1 className={styles.title}>Jolis Haus</h1>
       <p className={styles.subtitle}>Angemeldet.</p>
+      <Link href="/tasks" className={styles.link}>
+        Aufgaben
+      </Link>
       <Link href="/settings/categories" className={styles.link}>
         Kategorien verwalten
       </Link>
