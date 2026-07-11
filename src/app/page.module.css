@@ -17,3 +17,9 @@
   font: var(--font-body);
   color: var(--color-text-secondary);
 }
+
+.link {
+  margin-top: var(--space-4);
+  color: var(--color-accent);
+  font: var(--font-body);
+}

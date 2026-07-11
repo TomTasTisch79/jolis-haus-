@@ -1,3 +1,5 @@
+import { APPLE_SYSTEM_COLORS } from "@/lib/colors";
+
 export type Profile = {
   id: string;
   username: string;
@@ -7,11 +9,4 @@ export type Profile = {
 
 export const MAX_PROFILES = 2;
 
-export const PROFILE_COLORS = [
-  "#0A84FF",
-  "#FF453A",
-  "#30D158",
-  "#FF9F0A",
-  "#BF5AF2",
-  "#FF375F",
-] as const;
+export const PROFILE_COLORS = APPLE_SYSTEM_COLORS;
