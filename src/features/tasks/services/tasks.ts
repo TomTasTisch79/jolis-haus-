@@ -24,6 +24,12 @@ export async function fetchPoolTasks(): Promise<Task[]> {
   return data;
 }
 
+export async function fetchAllTasks(): Promise<Task[]> {
+  const { data, error } = await supabase.from("tasks").select("*");
+  if (error) throw error;
+  return data;
+}
+
 export async function createTask(input: TaskInput, createdBy: string): Promise<Task> {
   const { data, error } = await supabase
     .from("tasks")

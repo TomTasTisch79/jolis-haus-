@@ -26,6 +26,9 @@ export default function Home() {
       <Link href="/pool" className={styles.link}>
         Zufalls-Pool
       </Link>
+      <Link href="/statistics" className={styles.link}>
+        Statistik
+      </Link>
       <Link href="/settings/categories" className={styles.link}>
         Kategorien verwalten
       </Link>

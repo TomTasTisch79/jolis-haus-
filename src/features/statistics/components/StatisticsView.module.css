@@ -1,0 +1,150 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.segmented {
+  display: flex;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-separator);
+}
+
+.segmentButton {
+  flex: 1;
+  padding: var(--space-2);
+  border: none;
+  background: var(--color-surface-secondary);
+  color: var(--color-text-primary);
+  font: var(--font-footnote);
+  cursor: pointer;
+}
+
+.segmentButtonSelected {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.card {
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font: var(--font-footnote);
+  font-weight: 600;
+}
+
+.name {
+  font: var(--font-headline);
+}
+
+.points {
+  margin-left: auto;
+  font: var(--font-title2);
+  color: var(--color-accent);
+}
+
+.workloadBar {
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-secondary);
+  overflow: hidden;
+}
+
+.workloadFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metricValue {
+  font: var(--font-headline);
+}
+
+.metricLabel {
+  font: var(--font-caption1);
+  color: var(--color-text-secondary);
+}
+
+.historyTitle {
+  font: var(--font-footnote);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.historyItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+}
+
+.historyContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.historyTitleText {
+  font: var(--font-footnote);
+}
+
+.historyMeta {
+  font: var(--font-caption2);
+  color: var(--color-text-secondary);
+}
+
+.historyPoints {
+  font: var(--font-footnote);
+  font-weight: 600;
+}
+
+.empty {
+  font: var(--font-body);
+  color: var(--color-text-secondary);
+}
