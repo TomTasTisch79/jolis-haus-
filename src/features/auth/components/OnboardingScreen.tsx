@@ -35,7 +35,7 @@ export function OnboardingScreen({ onProfileSelected }: OnboardingScreenProps) {
 
   return (
     <main className={styles.screen}>
-      <h1 className={styles.title}>Herzens App</h1>
+      <h1 className={styles.title}>Herzens App ❤️</h1>
 
       {profiles.length > 0 && (
         <div className={styles.profileList}>

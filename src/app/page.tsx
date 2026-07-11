@@ -26,7 +26,7 @@ export default function Home() {
 
   return (
     <main className={styles.page}>
-      <h1 className={styles.title}>Herzens App</h1>
+      <h1 className={styles.title}>Herzens App ❤️</h1>
 
       <ReminderBanner profileId={profileId} />
       <MiniCalendar />
