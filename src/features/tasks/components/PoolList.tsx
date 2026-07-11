@@ -4,9 +4,6 @@ import { useMemo, useState } from "react";
 import { useCategories } from "@/features/categories/hooks/useCategories";
 import { useProfiles } from "@/features/auth/hooks/useProfiles";
 import { useCurrentProfileId } from "@/features/auth/hooks/useCurrentProfileId";
-import { useRatings } from "@/features/ratings/hooks/useRatings";
-import { rateTask } from "@/features/ratings/services/ratings";
-import type { RatingValue } from "@/features/ratings/types";
 import {
   computeWeeklyAssignmentPreview,
   commitWeeklyAssignment,
@@ -14,11 +11,12 @@ import {
 } from "@/features/fairness/services/weeklyAssignment";
 import { getUpcomingMondays } from "@/features/fairness/logic/week";
 import type { AssignmentPreview } from "@/features/fairness/types";
+import { SIZE_POINTS } from "@/lib/points";
 import { usePoolTasks } from "../hooks/usePoolTasks";
-import { completeTask, createTask, deleteTask, updateTask } from "../services/tasks";
+import { getLatestPerSeries } from "../logic/poolDefinitions";
+import { createTask, deleteTask, updateTask } from "../services/tasks";
 import type { Task, TaskInput } from "../types";
 import { TaskForm } from "./TaskForm";
-import { TaskListItem } from "./TaskListItem";
 import styles from "./PoolList.module.css";
 
 type WeekOption = { date: string; isPlanned: boolean };
@@ -33,10 +31,10 @@ export function PoolList() {
   const { categories } = useCategories();
   const { profiles } = useProfiles();
   const { profileId: currentProfileId } = useCurrentProfileId();
-  const { ratings, reload: reloadRatings } = useRatings();
 
   const [isCreating, setIsCreating] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [weekOptions, setWeekOptions] = useState<WeekOption[] | null>(null);
   const [preview, setPreview] = useState<AssignmentPreview | null>(null);
   const [isAssigning, setIsAssigning] = useState(false);
@@ -49,18 +47,12 @@ export function PoolList() {
     () => new Map(profiles?.map((profile) => [profile.id, profile])),
     [profiles]
   );
-  const ratingByTaskId = useMemo(
-    () => new Map(ratings?.map((rating) => [rating.task_id, rating])),
-    [ratings]
-  );
+
+  const definitions = useMemo(() => getLatestPerSeries(tasks ?? []), [tasks]);
 
   if (isLoading || tasks === null) {
     return null;
   }
-
-  const unassigned = tasks.filter((task) => !task.assigned_profile_id && !task.completed_at);
-  const assignedThisWeek = tasks.filter((task) => task.assigned_profile_id && !task.completed_at);
-  const completed = tasks.filter((task) => task.completed_at);
 
   async function handleCreate(values: TaskInput) {
     await createTask(values, currentProfileId ?? "");
@@ -77,19 +69,7 @@ export function PoolList() {
   async function handleDelete(id: string) {
     await deleteTask(id);
     await reload();
-    setEditingTask(null);
-  }
-
-  async function handleComplete(task: Task) {
-    if (!currentProfileId) return;
-    await completeTask(task, currentProfileId);
-    await reload();
-  }
-
-  async function handleRate(task: Task, rating: RatingValue) {
-    if (!currentProfileId) return;
-    await rateTask(task.id, task.size, rating, currentProfileId);
-    await reloadRatings();
+    setConfirmDeleteId(null);
   }
 
   async function handleOpenWeekPicker() {
@@ -118,47 +98,53 @@ export function PoolList() {
     setPreview(null);
   }
 
-  function renderTask(task: Task) {
-    return (
-      <TaskListItem
-        key={task.id}
-        task={task}
-        category={task.category_id ? categoryById.get(task.category_id) : undefined}
-        profile={task.assigned_profile_id ? profileById.get(task.assigned_profile_id) : undefined}
-        rating={ratingByTaskId.get(task.id)}
-        currentProfileId={currentProfileId}
-        onEdit={() => setEditingTask(task)}
-        onComplete={() => handleComplete(task)}
-        onRate={(rating) => handleRate(task, rating)}
-      />
-    );
-  }
-
   return (
     <div className={styles.wrapper}>
-      <div className={styles.section}>
-        <span className={styles.sectionTitle}>Unzugewiesen im Pool</span>
-        {unassigned.length === 0 && <p className={styles.empty}>Keine offenen Pool-Aufgaben.</p>}
-        {unassigned.map(renderTask)}
-      </div>
-
       <button className={styles.assignButton} onClick={handleOpenWeekPicker}>
         Neue Woche zuweisen
       </button>
 
-      {assignedThisWeek.length > 0 && (
-        <div className={styles.section}>
-          <span className={styles.sectionTitle}>Diese Woche zugewiesen</span>
-          {assignedThisWeek.map(renderTask)}
-        </div>
-      )}
-
-      {completed.length > 0 && (
-        <div className={styles.section}>
-          <span className={styles.sectionTitle}>Erledigt</span>
-          {completed.map(renderTask)}
-        </div>
-      )}
+      <div className={styles.section}>
+        <span className={styles.sectionTitle}>Pool-Aufgaben</span>
+        {definitions.length === 0 && (
+          <p className={styles.empty}>Noch keine Pool-Aufgaben angelegt.</p>
+        )}
+        {definitions.map((task) => {
+          const category = task.category_id ? categoryById.get(task.category_id) : undefined;
+          return (
+            <div key={task.id} className={styles.poolItem}>
+              <span
+                className={styles.poolAvatar}
+                style={{ background: category?.color ?? "var(--color-accent)" }}
+              >
+                {category?.icon ?? "🎲"}
+              </span>
+              <button className={styles.poolName} onClick={() => setEditingTask(task)}>
+                {task.title}
+              </button>
+              <span className={styles.poolPoints}>{SIZE_POINTS[task.size]} Punkte</span>
+              {confirmDeleteId === task.id ? (
+                <span className={styles.confirmRow}>
+                  <button className={styles.confirmYes} onClick={() => handleDelete(task.id)}>
+                    Löschen
+                  </button>
+                  <button className={styles.confirmNo} onClick={() => setConfirmDeleteId(null)}>
+                    Abbrechen
+                  </button>
+                </span>
+              ) : (
+                <button
+                  className={styles.deleteButton}
+                  onClick={() => setConfirmDeleteId(task.id)}
+                  aria-label="Löschen"
+                >
+                  🗑️
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
 
       <button className={styles.addButton} onClick={() => setIsCreating(true)}>
         + Neue Pool-Aufgabe
@@ -202,13 +188,6 @@ export function PoolList() {
               onSubmit={(values) => handleUpdate(editingTask.id, values)}
               onCancel={() => setEditingTask(null)}
             />
-            <button
-              className={styles.addButton}
-              style={{ borderColor: "var(--color-danger)", color: "var(--color-danger)" }}
-              onClick={() => handleDelete(editingTask.id)}
-            >
-              Aufgabe löschen
-            </button>
           </div>
         </div>
       )}
@@ -217,9 +196,7 @@ export function PoolList() {
         <div className={styles.overlay} onClick={() => setWeekOptions(null)}>
           <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
             <h2 className={styles.previewTitle}>Woche wählen</h2>
-            <p className={styles.previewMeta}>
-              Ab welchem Montag soll die Zuweisung starten?
-            </p>
+            <p className={styles.previewMeta}>Ab welchem Montag soll die Zuweisung starten?</p>
             <div className={styles.weekOptionList}>
               {weekOptions.map((option) => (
                 <button

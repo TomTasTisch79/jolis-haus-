@@ -1,0 +1,52 @@
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.headerLabel {
+  flex: 1;
+  text-align: left;
+  font: var(--font-headline);
+  color: var(--color-text-primary);
+}
+
+.count {
+  min-width: 24px;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: #ffffff;
+  font: var(--font-caption1);
+  font-weight: 600;
+  text-align: center;
+}
+
+.chevron {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+.empty {
+  font: var(--font-footnote);
+  color: var(--color-text-secondary);
+}
