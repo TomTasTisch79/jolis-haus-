@@ -1,0 +1,13 @@
+.ring {
+  transform: rotate(-90deg);
+}
+
+.track {
+  fill: none;
+}
+
+.progress {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.4s ease;
+}

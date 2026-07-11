@@ -1,0 +1,54 @@
+.card {
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.title {
+  font: var(--font-footnote);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ringWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ringLabel {
+  position: absolute;
+  font: var(--font-caption2);
+  font-weight: 600;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font: var(--font-headline);
+}
+
+.streak {
+  font: var(--font-caption1);
+  color: var(--color-text-secondary);
+}
+
+.points {
+  margin-left: auto;
+  font: var(--font-title2);
+  color: var(--color-accent);
+}

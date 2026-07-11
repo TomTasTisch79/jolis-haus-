@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { OnboardingScreen } from "@/features/auth/components/OnboardingScreen";
 import { useCurrentProfileId } from "@/features/auth/hooks/useCurrentProfileId";
+import { Leaderboard } from "@/features/gamification/components/Leaderboard";
+import { AchievementsList } from "@/features/gamification/components/AchievementsList";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -19,19 +21,24 @@ export default function Home() {
   return (
     <main className={styles.page}>
       <h1 className={styles.title}>Jolis Haus</h1>
-      <p className={styles.subtitle}>Angemeldet.</p>
-      <Link href="/tasks" className={styles.link}>
-        Aufgaben
-      </Link>
-      <Link href="/pool" className={styles.link}>
-        Zufalls-Pool
-      </Link>
-      <Link href="/statistics" className={styles.link}>
-        Statistik
-      </Link>
-      <Link href="/settings/categories" className={styles.link}>
-        Kategorien verwalten
-      </Link>
+
+      <Leaderboard />
+      <AchievementsList profileId={profileId} />
+
+      <nav className={styles.nav}>
+        <Link href="/tasks" className={styles.link}>
+          Aufgaben
+        </Link>
+        <Link href="/pool" className={styles.link}>
+          Zufalls-Pool
+        </Link>
+        <Link href="/statistics" className={styles.link}>
+          Statistik
+        </Link>
+        <Link href="/settings/categories" className={styles.link}>
+          Kategorien verwalten
+        </Link>
+      </nav>
     </main>
   );
 }
