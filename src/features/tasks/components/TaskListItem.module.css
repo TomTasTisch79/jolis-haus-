@@ -6,10 +6,6 @@
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  cursor: pointer;
-  text-align: left;
-  border: none;
-  width: 100%;
 }
 
 .avatar {
@@ -28,6 +24,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+}
+
+.titleButton {
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
 }
 
 .title {
@@ -51,4 +55,51 @@
 
 .overdue {
   color: var(--color-danger);
+}
+
+.actions {
+  margin-top: var(--space-2);
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.completeButton {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--color-accent);
+  color: #ffffff;
+  font: var(--font-footnote);
+  cursor: pointer;
+}
+
+.goodButton {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--color-success);
+  color: #ffffff;
+  font: var(--font-footnote);
+  cursor: pointer;
+}
+
+.badButton {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--color-danger);
+  color: #ffffff;
+  font: var(--font-footnote);
+  cursor: pointer;
+}
+
+.waitingText {
+  font: var(--font-caption1);
+  color: var(--color-text-secondary);
+}
+
+.ratingBadge {
+  font: var(--font-footnote);
+  color: var(--color-text-secondary);
 }

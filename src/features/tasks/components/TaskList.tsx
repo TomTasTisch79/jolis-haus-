@@ -4,8 +4,11 @@ import { useMemo, useState } from "react";
 import { useCategories } from "@/features/categories/hooks/useCategories";
 import { useProfiles } from "@/features/auth/hooks/useProfiles";
 import { useCurrentProfileId } from "@/features/auth/hooks/useCurrentProfileId";
+import { useRatings } from "@/features/ratings/hooks/useRatings";
+import { rateTask } from "@/features/ratings/services/ratings";
+import type { RatingValue } from "@/features/ratings/types";
 import { useTasks } from "../hooks/useTasks";
-import { createTask, deleteTask, updateTask } from "../services/tasks";
+import { completeTask, createTask, deleteTask, updateTask } from "../services/tasks";
 import type { Task, TaskInput } from "../types";
 import { TaskForm } from "./TaskForm";
 import { TaskListItem } from "./TaskListItem";
@@ -18,6 +21,7 @@ export function TaskList() {
   const { categories } = useCategories();
   const { profiles } = useProfiles();
   const { profileId: currentProfileId } = useCurrentProfileId();
+  const { ratings, reload: reloadRatings } = useRatings();
 
   const [categoryFilter, setCategoryFilter] = useState("");
   const [profileFilter, setProfileFilter] = useState("");
@@ -32,6 +36,10 @@ export function TaskList() {
   const profileById = useMemo(
     () => new Map(profiles?.map((profile) => [profile.id, profile])),
     [profiles]
+  );
+  const ratingByTaskId = useMemo(
+    () => new Map(ratings?.map((rating) => [rating.task_id, rating])),
+    [ratings]
   );
 
   const filteredTasks = useMemo(() => {
@@ -65,6 +73,18 @@ export function TaskList() {
     await deleteTask(id);
     await reload();
     setEditingTask(null);
+  }
+
+  async function handleComplete(task: Task) {
+    if (!currentProfileId) return;
+    await completeTask(task, currentProfileId);
+    await reload();
+  }
+
+  async function handleRate(task: Task, rating: RatingValue) {
+    if (!currentProfileId) return;
+    await rateTask(task.id, task.size, rating, currentProfileId);
+    await reloadRatings();
   }
 
   return (
@@ -113,7 +133,11 @@ export function TaskList() {
             task={task}
             category={task.category_id ? categoryById.get(task.category_id) : undefined}
             profile={task.assigned_profile_id ? profileById.get(task.assigned_profile_id) : undefined}
-            onClick={() => setEditingTask(task)}
+            rating={ratingByTaskId.get(task.id)}
+            currentProfileId={currentProfileId}
+            onEdit={() => setEditingTask(task)}
+            onComplete={() => handleComplete(task)}
+            onRate={(rating) => handleRate(task, rating)}
           />
         ))}
       </div>
