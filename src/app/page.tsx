@@ -8,6 +8,7 @@ import { Leaderboard } from "@/features/gamification/components/Leaderboard";
 import { AchievementsList } from "@/features/gamification/components/AchievementsList";
 import { ReminderBanner } from "@/features/notifications/components/ReminderBanner";
 import { usePendingRatings } from "@/features/ratings/hooks/usePendingRatings";
+import { RefreshButton } from "@/components/RefreshButton";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -26,7 +27,10 @@ export default function Home() {
 
   return (
     <main className={styles.page}>
-      <h1 className={styles.title}>Herzens App ❤️</h1>
+      <div className={styles.headerRow}>
+        <h1 className={styles.title}>Herzens App ❤️</h1>
+        <RefreshButton />
+      </div>
 
       <ReminderBanner profileId={profileId} />
       <MiniCalendar />

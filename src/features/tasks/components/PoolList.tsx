@@ -10,7 +10,9 @@ import type { RatingValue } from "@/features/ratings/types";
 import {
   computeWeeklyAssignmentPreview,
   commitWeeklyAssignment,
+  fetchPlannedWeekStartDates,
 } from "@/features/fairness/services/weeklyAssignment";
+import { getUpcomingMondays } from "@/features/fairness/logic/week";
 import type { AssignmentPreview } from "@/features/fairness/types";
 import { usePoolTasks } from "../hooks/usePoolTasks";
 import { completeTask, createTask, deleteTask, updateTask } from "../services/tasks";
@@ -18,6 +20,13 @@ import type { Task, TaskInput } from "../types";
 import { TaskForm } from "./TaskForm";
 import { TaskListItem } from "./TaskListItem";
 import styles from "./PoolList.module.css";
+
+type WeekOption = { date: string; isPlanned: boolean };
+
+function formatWeekLabel(dateISO: string): string {
+  const [, month, day] = dateISO.split("-");
+  return `Mo, ${day}.${month}.`;
+}
 
 export function PoolList() {
   const { tasks, isLoading, reload } = usePoolTasks();
@@ -28,6 +37,7 @@ export function PoolList() {
 
   const [isCreating, setIsCreating] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [weekOptions, setWeekOptions] = useState<WeekOption[] | null>(null);
   const [preview, setPreview] = useState<AssignmentPreview | null>(null);
   const [isAssigning, setIsAssigning] = useState(false);
 
@@ -82,9 +92,20 @@ export function PoolList() {
     await reloadRatings();
   }
 
-  async function handleOpenPreview() {
+  async function handleOpenWeekPicker() {
+    const planned = await fetchPlannedWeekStartDates();
+    const plannedSet = new Set(planned);
+    const mondays = getUpcomingMondays(8);
+    setWeekOptions(mondays.map((date) => ({ date, isPlanned: plannedSet.has(date) })));
+  }
+
+  async function handleSelectWeek(date: string) {
     if (!profiles || profiles.length !== 2) return;
-    const nextPreview = await computeWeeklyAssignmentPreview([profiles[0].id, profiles[1].id]);
+    setWeekOptions(null);
+    const nextPreview = await computeWeeklyAssignmentPreview(
+      [profiles[0].id, profiles[1].id],
+      date
+    );
     setPreview(nextPreview);
   }
 
@@ -121,7 +142,7 @@ export function PoolList() {
         {unassigned.map(renderTask)}
       </div>
 
-      <button className={styles.assignButton} onClick={handleOpenPreview}>
+      <button className={styles.assignButton} onClick={handleOpenWeekPicker}>
         Neue Woche zuweisen
       </button>
 
@@ -188,6 +209,37 @@ export function PoolList() {
             >
               Aufgabe löschen
             </button>
+          </div>
+        </div>
+      )}
+
+      {weekOptions && (
+        <div className={styles.overlay} onClick={() => setWeekOptions(null)}>
+          <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
+            <h2 className={styles.previewTitle}>Woche wählen</h2>
+            <p className={styles.previewMeta}>
+              Ab welchem Montag soll die Zuweisung starten?
+            </p>
+            <div className={styles.weekOptionList}>
+              {weekOptions.map((option) => (
+                <button
+                  key={option.date}
+                  className={styles.weekOptionButton}
+                  disabled={option.isPlanned}
+                  onClick={() => handleSelectWeek(option.date)}
+                >
+                  <span>{formatWeekLabel(option.date)}</span>
+                  {option.isPlanned && (
+                    <span className={styles.weekOptionBadge}>bereits geplant</span>
+                  )}
+                </button>
+              ))}
+            </div>
+            <div className={styles.previewActions}>
+              <button className={styles.cancelButton} onClick={() => setWeekOptions(null)}>
+                Abbrechen
+              </button>
+            </div>
           </div>
         </div>
       )}

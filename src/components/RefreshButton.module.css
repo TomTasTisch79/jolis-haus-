@@ -1,0 +1,13 @@
+.button {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  color: var(--color-accent);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}

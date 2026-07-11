@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase/client";
 import { SIZE_POINTS, type TaskSize } from "@/lib/points";
 import { assignPoolTasks } from "../logic/assignPool";
-import { getNextUnplannedWeekStart, getWeekEnd } from "../logic/week";
+import { getWeekEnd } from "../logic/week";
 import type { AssignmentPreview } from "../types";
 
 export async function fetchPlannedWeekStartDates(): Promise<string[]> {
@@ -11,16 +11,9 @@ export async function fetchPlannedWeekStartDates(): Promise<string[]> {
 }
 
 export async function computeWeeklyAssignmentPreview(
-  profileIds: [string, string]
+  profileIds: [string, string],
+  weekStartDate: string
 ): Promise<AssignmentPreview> {
-  const { data: existingWeeks, error: weeksError } = await supabase
-    .from("weekly_assignments")
-    .select("week_start_date");
-  if (weeksError) throw weeksError;
-
-  const weekStartDate = getNextUnplannedWeekStart(
-    (existingWeeks ?? []).map((week) => week.week_start_date)
-  );
   const weekEndDate = getWeekEnd(weekStartDate);
 
   const { data: fixedTasks, error: fixedError } = await supabase
