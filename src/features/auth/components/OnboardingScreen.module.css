@@ -1,0 +1,113 @@
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.title {
+  font: var(--font-large-title);
+}
+
+.subtitle {
+  font: var(--font-body);
+  color: var(--color-text-secondary);
+}
+
+.profileList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 340px;
+}
+
+.profileButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  font: var(--font-headline);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.profileButton:active {
+  transform: scale(0.98);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.secondaryButton {
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: none;
+  font: var(--font-callout);
+  color: var(--color-accent);
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 340px;
+}
+
+.input {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-separator);
+  background: var(--color-surface);
+  font: var(--font-body);
+  color: var(--color-text-primary);
+}
+
+.colorRow {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.colorSwatch {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.colorSwatchSelected {
+  border-color: var(--color-text-primary);
+}
+
+.primaryButton {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: none;
+  background: var(--color-accent);
+  color: #ffffff;
+  font: var(--font-headline);
+  cursor: pointer;
+}
+
+.primaryButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
