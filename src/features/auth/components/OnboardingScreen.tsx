@@ -64,14 +64,16 @@ export function OnboardingScreen({ onProfileSelected }: OnboardingScreenProps) {
           <input
             className={styles.input}
             placeholder="Dein Name"
+            aria-label="Dein Name"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
           />
-          <div className={styles.colorRow}>
+          <div className={styles.colorRow} role="group" aria-label="Farbe auswählen">
             {PROFILE_COLORS.map((swatch) => (
               <button
                 key={swatch}
                 type="button"
+                aria-pressed={swatch === color}
                 className={`${styles.colorSwatch} ${
                   swatch === color ? styles.colorSwatchSelected : ""
                 }`}

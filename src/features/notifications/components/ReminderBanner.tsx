@@ -28,7 +28,7 @@ export function ReminderBanner({ profileId }: ReminderBannerProps) {
   }
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} role="status" aria-live="polite">
       {reminders.map((reminder) => (
         <div key={reminder.key} className={styles.banner}>
           <span className={styles.message}>{reminder.message}</span>

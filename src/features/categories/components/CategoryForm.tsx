@@ -39,15 +39,17 @@ export function CategoryForm({ initial, onSubmit, onCancel }: CategoryFormProps)
         <input
           className={styles.nameInput}
           placeholder="Name"
+          aria-label="Name"
           value={name}
           onChange={(event) => setName(event.target.value)}
         />
       </div>
-      <div className={styles.colorRow}>
+      <div className={styles.colorRow} role="group" aria-label="Farbe auswählen">
         {APPLE_SYSTEM_COLORS.map((swatch) => (
           <button
             key={swatch}
             type="button"
+            aria-pressed={swatch === color}
             className={`${styles.swatch} ${swatch === color ? styles.swatchSelected : ""}`}
             style={{ background: swatch }}
             onClick={() => setColor(swatch)}

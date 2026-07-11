@@ -92,6 +92,7 @@ export function TaskList() {
       <div className={styles.filters}>
         <select
           className={styles.filterSelect}
+          aria-label="Nach Kategorie filtern"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
         >
@@ -104,6 +105,7 @@ export function TaskList() {
         </select>
         <select
           className={styles.filterSelect}
+          aria-label="Nach Person filtern"
           value={profileFilter}
           onChange={(e) => setProfileFilter(e.target.value)}
         >
@@ -116,6 +118,7 @@ export function TaskList() {
         </select>
         <select
           className={styles.filterSelect}
+          aria-label="Nach Status filtern"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
         >

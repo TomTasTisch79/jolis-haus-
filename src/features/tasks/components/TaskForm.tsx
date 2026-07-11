@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useCategories } from "@/features/categories/hooks/useCategories";
 import { useProfiles } from "@/features/auth/hooks/useProfiles";
 import { SIZE_LABELS, SIZE_POINTS } from "@/lib/points";
@@ -23,6 +23,7 @@ function ruleToType(rule: RecurrenceRule | null): RecurrenceType {
 export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
   const { categories } = useCategories();
   const { profiles } = useProfiles();
+  const formId = useId();
 
   const [title, setTitle] = useState(initial?.title ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
@@ -79,13 +80,23 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
   return (
     <div className={styles.form}>
       <div className={styles.field}>
-        <label className={styles.label}>Titel</label>
-        <input className={styles.input} value={title} onChange={(e) => setTitle(e.target.value)} />
+        <label className={styles.label} htmlFor={`${formId}-title`}>
+          Titel
+        </label>
+        <input
+          id={`${formId}-title`}
+          className={styles.input}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>Beschreibung</label>
+        <label className={styles.label} htmlFor={`${formId}-description`}>
+          Beschreibung
+        </label>
         <textarea
+          id={`${formId}-description`}
           className={styles.textarea}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -93,8 +104,11 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>Kategorie</label>
+        <label className={styles.label} htmlFor={`${formId}-category`}>
+          Kategorie
+        </label>
         <select
+          id={`${formId}-category`}
           className={styles.select}
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
@@ -109,12 +123,15 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>Größe</label>
-        <div className={styles.segmented}>
+        <span className={styles.label} id={`${formId}-size-label`}>
+          Größe
+        </span>
+        <div className={styles.segmented} role="group" aria-labelledby={`${formId}-size-label`}>
           {(Object.keys(SIZE_POINTS) as TaskSize[]).map((option) => (
             <button
               key={option}
               type="button"
+              aria-pressed={size === option}
               className={`${styles.segmentButton} ${
                 size === option ? styles.segmentButtonSelected : ""
               }`}
@@ -127,10 +144,17 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>Zuweisung</label>
-        <div className={styles.segmented}>
+        <span className={styles.label} id={`${formId}-assignment-label`}>
+          Zuweisung
+        </span>
+        <div
+          className={styles.segmented}
+          role="group"
+          aria-labelledby={`${formId}-assignment-label`}
+        >
           <button
             type="button"
+            aria-pressed={!isRandomPool}
             className={`${styles.segmentButton} ${!isRandomPool ? styles.segmentButtonSelected : ""}`}
             onClick={() => setIsRandomPool(false)}
           >
@@ -138,6 +162,7 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
           </button>
           <button
             type="button"
+            aria-pressed={isRandomPool}
             className={`${styles.segmentButton} ${isRandomPool ? styles.segmentButtonSelected : ""}`}
             onClick={() => setIsRandomPool(true)}
           >
@@ -149,8 +174,11 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
       {!isRandomPool && (
         <>
           <div className={styles.field}>
-            <label className={styles.label}>Fälligkeit</label>
+            <label className={styles.label} htmlFor={`${formId}-due-date`}>
+              Fälligkeit
+            </label>
             <input
+              id={`${formId}-due-date`}
               type="date"
               className={styles.input}
               value={dueDate}
@@ -159,8 +187,11 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Zugewiesen an</label>
+            <label className={styles.label} htmlFor={`${formId}-assigned-profile`}>
+              Zugewiesen an
+            </label>
             <select
+              id={`${formId}-assigned-profile`}
               className={styles.select}
               value={assignedProfileId ?? ""}
               onChange={(e) => setAssignedProfileId(e.target.value)}
@@ -177,8 +208,11 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
       )}
 
       <div className={styles.field}>
-        <label className={styles.label}>Wiederholung</label>
+        <label className={styles.label} htmlFor={`${formId}-recurrence`}>
+          Wiederholung
+        </label>
         <select
+          id={`${formId}-recurrence`}
           className={styles.select}
           value={recurrenceType}
           onChange={(e) => setRecurrenceType(e.target.value as RecurrenceType)}
@@ -195,13 +229,16 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
         recurrenceType === "weekly" ||
         recurrenceType === "monthly") && (
         <div className={styles.intervalRow}>
-          <span className={styles.intervalLabel}>alle</span>
+          <span className={styles.intervalLabel} id={`${formId}-interval-label`}>
+            alle
+          </span>
           <input
             type="number"
             min={1}
             className={styles.intervalInput}
             value={interval}
             onChange={(e) => setInterval(Math.max(1, Number(e.target.value)))}
+            aria-labelledby={`${formId}-interval-label`}
           />
           <span className={styles.intervalLabel}>
             {recurrenceType === "daily" && "Tag(e)"}
@@ -212,11 +249,12 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
       )}
 
       {recurrenceType === "custom" && (
-        <div className={styles.weekdayRow}>
+        <div className={styles.weekdayRow} role="group" aria-label="Wochentage auswählen">
           {WEEKDAYS.map((day) => (
             <button
               key={day.value}
               type="button"
+              aria-pressed={weekdays.includes(day.value)}
               className={`${styles.weekdayButton} ${
                 weekdays.includes(day.value) ? styles.weekdayButtonSelected : ""
               }`}
