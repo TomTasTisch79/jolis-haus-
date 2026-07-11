@@ -30,6 +30,7 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
   const [size, setSize] = useState<TaskSize>(initial?.size ?? "small");
   const [dueDate, setDueDate] = useState(initial?.dueDate ?? "");
   const [assignedProfileId, setAssignedProfileId] = useState(initial?.assignedProfileId ?? "");
+  const [isRandomPool, setIsRandomPool] = useState(initial?.isRandomPool ?? false);
   const [recurrenceType, setRecurrenceType] = useState<RecurrenceType>(
     ruleToType(initial?.recurrenceRule ?? null)
   );
@@ -57,7 +58,7 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
 
   async function handleSubmit() {
     const trimmedTitle = title.trim();
-    if (!trimmedTitle || !assignedProfileId) return;
+    if (!trimmedTitle || (!isRandomPool && !assignedProfileId)) return;
 
     setIsSubmitting(true);
     await onSubmit({
@@ -67,12 +68,13 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
       size,
       dueDate: dueDate || null,
       recurrenceRule: buildRecurrenceRule(),
-      assignedProfileId,
+      assignedProfileId: isRandomPool ? null : assignedProfileId,
+      isRandomPool,
     });
     setIsSubmitting(false);
   }
 
-  const canSubmit = title.trim() && assignedProfileId && !isSubmitting;
+  const canSubmit = title.trim() && (isRandomPool || assignedProfileId) && !isSubmitting;
 
   return (
     <div className={styles.form}>
@@ -125,30 +127,54 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>Fälligkeit</label>
-        <input
-          type="date"
-          className={styles.input}
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-        />
+        <label className={styles.label}>Zuweisung</label>
+        <div className={styles.segmented}>
+          <button
+            type="button"
+            className={`${styles.segmentButton} ${!isRandomPool ? styles.segmentButtonSelected : ""}`}
+            onClick={() => setIsRandomPool(false)}
+          >
+            Fest zugewiesen
+          </button>
+          <button
+            type="button"
+            className={`${styles.segmentButton} ${isRandomPool ? styles.segmentButtonSelected : ""}`}
+            onClick={() => setIsRandomPool(true)}
+          >
+            In Zufalls-Pool
+          </button>
+        </div>
       </div>
 
-      <div className={styles.field}>
-        <label className={styles.label}>Zugewiesen an</label>
-        <select
-          className={styles.select}
-          value={assignedProfileId}
-          onChange={(e) => setAssignedProfileId(e.target.value)}
-        >
-          <option value="">Bitte wählen</option>
-          {profiles?.map((profile) => (
-            <option key={profile.id} value={profile.id}>
-              {profile.username}
-            </option>
-          ))}
-        </select>
-      </div>
+      {!isRandomPool && (
+        <>
+          <div className={styles.field}>
+            <label className={styles.label}>Fälligkeit</label>
+            <input
+              type="date"
+              className={styles.input}
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Zugewiesen an</label>
+            <select
+              className={styles.select}
+              value={assignedProfileId ?? ""}
+              onChange={(e) => setAssignedProfileId(e.target.value)}
+            >
+              <option value="">Bitte wählen</option>
+              {profiles?.map((profile) => (
+                <option key={profile.id} value={profile.id}>
+                  {profile.username}
+                </option>
+              ))}
+            </select>
+          </div>
+        </>
+      )}
 
       <div className={styles.field}>
         <label className={styles.label}>Wiederholung</label>

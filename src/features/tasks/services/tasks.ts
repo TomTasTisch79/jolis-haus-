@@ -13,6 +13,17 @@ export async function fetchFixedTasks(): Promise<Task[]> {
   return data;
 }
 
+export async function fetchPoolTasks(): Promise<Task[]> {
+  const { data, error } = await supabase
+    .from("tasks")
+    .select("*")
+    .eq("is_random_pool", true)
+    .order("created_at", { ascending: true });
+
+  if (error) throw error;
+  return data;
+}
+
 export async function createTask(input: TaskInput, createdBy: string): Promise<Task> {
   const { data, error } = await supabase
     .from("tasks")
@@ -21,10 +32,10 @@ export async function createTask(input: TaskInput, createdBy: string): Promise<T
       description: input.description || null,
       category_id: input.categoryId,
       size: input.size,
-      due_date: input.dueDate,
+      due_date: input.isRandomPool ? null : input.dueDate,
       recurrence_rule: input.recurrenceRule,
-      assigned_profile_id: input.assignedProfileId,
-      is_random_pool: false,
+      assigned_profile_id: input.isRandomPool ? null : input.assignedProfileId,
+      is_random_pool: input.isRandomPool,
       created_by: createdBy,
     })
     .select()
@@ -42,9 +53,10 @@ export async function updateTask(id: string, input: TaskInput): Promise<void> {
       description: input.description || null,
       category_id: input.categoryId,
       size: input.size,
-      due_date: input.dueDate,
+      due_date: input.isRandomPool ? null : input.dueDate,
       recurrence_rule: input.recurrenceRule,
-      assigned_profile_id: input.assignedProfileId,
+      assigned_profile_id: input.isRandomPool ? null : input.assignedProfileId,
+      is_random_pool: input.isRandomPool,
     })
     .eq("id", id);
 
@@ -74,10 +86,11 @@ export async function completeTask(task: Task, completedByProfileId: string): Pr
   if (error) throw error;
 
   if (task.recurrence_rule) {
-    const nextDueDate = computeNextDueDate(
-      task.due_date ?? completedAt.slice(0, 10),
-      task.recurrence_rule
-    );
+    // Recurring pool tasks return to the pool unassigned; the next weekly
+    // fairness run picks them up and sets a fresh due date.
+    const nextDueDate = task.is_random_pool
+      ? null
+      : computeNextDueDate(task.due_date ?? completedAt.slice(0, 10), task.recurrence_rule);
 
     const { error: insertError } = await supabase.from("tasks").insert({
       title: task.title,
@@ -88,7 +101,7 @@ export async function completeTask(task: Task, completedByProfileId: string): Pr
       recurrence_rule: task.recurrence_rule,
       series_id: seriesId,
       is_random_pool: task.is_random_pool,
-      assigned_profile_id: task.assigned_profile_id,
+      assigned_profile_id: task.is_random_pool ? null : task.assigned_profile_id,
       created_by: task.created_by,
     });
 

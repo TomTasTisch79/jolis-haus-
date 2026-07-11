@@ -160,6 +160,7 @@ export function TaskList() {
                       dueDate: null,
                       recurrenceRule: null,
                       assignedProfileId: currentProfileId,
+                      isRandomPool: false,
                     }
                   : undefined
               }
@@ -181,7 +182,8 @@ export function TaskList() {
                 size: editingTask.size,
                 dueDate: editingTask.due_date,
                 recurrenceRule: editingTask.recurrence_rule,
-                assignedProfileId: editingTask.assigned_profile_id ?? "",
+                assignedProfileId: editingTask.assigned_profile_id,
+                isRandomPool: editingTask.is_random_pool,
               }}
               onSubmit={(values) => handleUpdate(editingTask.id, values)}
               onCancel={() => setEditingTask(null)}

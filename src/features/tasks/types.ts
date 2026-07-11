@@ -33,7 +33,8 @@ export type TaskInput = {
   size: TaskSize;
   dueDate: string | null;
   recurrenceRule: RecurrenceRule | null;
-  assignedProfileId: string;
+  assignedProfileId: string | null;
+  isRandomPool: boolean;
 };
 
 export const WEEKDAYS = [

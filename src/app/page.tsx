@@ -23,6 +23,9 @@ export default function Home() {
       <Link href="/tasks" className={styles.link}>
         Aufgaben
       </Link>
+      <Link href="/pool" className={styles.link}>
+        Zufalls-Pool
+      </Link>
       <Link href="/settings/categories" className={styles.link}>
         Kategorien verwalten
       </Link>
