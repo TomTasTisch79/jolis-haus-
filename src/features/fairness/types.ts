@@ -6,6 +6,7 @@ export type AssignmentPreviewItem = {
   size: TaskSize;
   points: number;
   assignedProfileId: string;
+  dueDate: string;
 };
 
 export type AssignmentPreview = {

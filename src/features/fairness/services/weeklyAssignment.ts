@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
+import { addDays, toISODate } from "@/lib/date";
 import { SIZE_POINTS, type TaskSize } from "@/lib/points";
 import { assignPoolTasks } from "../logic/assignPool";
 import { getWeekEnd } from "../logic/week";
@@ -55,12 +56,16 @@ export async function computeWeeklyAssignmentPreview(
     })),
   });
 
-  const items = (poolTasks ?? []).map((task) => ({
+  // Spread same-week tasks across the 7 days instead of piling them all
+  // onto the week's last day.
+  const weekStart = new Date(`${weekStartDate}T00:00:00`);
+  const items = (poolTasks ?? []).map((task, index) => ({
     taskId: task.id,
     title: task.title,
     size: task.size as TaskSize,
     points: SIZE_POINTS[task.size as TaskSize],
     assignedProfileId: assignment[task.id],
+    dueDate: toISODate(addDays(weekStart, index % 7)),
   }));
 
   return { weekStartDate, weekEndDate, items };
@@ -74,7 +79,7 @@ export async function commitWeeklyAssignment(
     preview.items.map((item) =>
       supabase
         .from("tasks")
-        .update({ assigned_profile_id: item.assignedProfileId, due_date: preview.weekEndDate })
+        .update({ assigned_profile_id: item.assignedProfileId, due_date: item.dueDate })
         .eq("id", item.taskId)
     )
   );

@@ -233,7 +233,9 @@ export function PoolList() {
             {preview.items.map((item) => (
               <div key={item.taskId} className={styles.previewItem}>
                 <span>{item.title}</span>
-                <span>{profileById.get(item.assignedProfileId)?.username}</span>
+                <span className={styles.previewItemMeta}>
+                  {profileById.get(item.assignedProfileId)?.username} · {item.dueDate}
+                </span>
               </div>
             ))}
             <div className={styles.previewActions}>
