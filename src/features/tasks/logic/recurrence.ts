@@ -1,7 +1,7 @@
 import { addDays, addMonths, isoWeekday, toISODate } from "@/lib/date";
 import type { RecurrenceRule } from "../types";
 
-export function computeNextDueDate(fromDateISO: string, rule: RecurrenceRule): string {
+function computeRawNextDueDate(fromDateISO: string, rule: RecurrenceRule): string {
   const from = new Date(`${fromDateISO}T00:00:00`);
 
   if (rule.type === "daily") return toISODate(addDays(from, rule.interval));
@@ -16,6 +16,21 @@ export function computeNextDueDate(fromDateISO: string, rule: RecurrenceRule): s
     cursor = addDays(cursor, 1);
   }
   return toISODate(addDays(from, 7));
+}
+
+export function computeNextDueDate(
+  fromDateISO: string,
+  rule: RecurrenceRule,
+  sundayAllowed: boolean = true
+): string {
+  const result = computeRawNextDueDate(fromDateISO, rule);
+  if (sundayAllowed) return result;
+
+  const resultDate = new Date(`${result}T00:00:00`);
+  if (isoWeekday(resultDate) === 7) {
+    return toISODate(addDays(resultDate, 1));
+  }
+  return result;
 }
 
 export function computeMissedPenaltyPoints(

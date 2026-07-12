@@ -24,6 +24,7 @@ export type Task = {
   missed_penalty_points: number;
   created_by: string | null;
   created_at: string;
+  sunday_allowed: boolean;
 };
 
 export type TaskInput = {
@@ -35,6 +36,7 @@ export type TaskInput = {
   recurrenceRule: RecurrenceRule | null;
   assignedProfileId: string | null;
   isRandomPool: boolean;
+  sundayAllowed: boolean;
 };
 
 export const WEEKDAYS = [

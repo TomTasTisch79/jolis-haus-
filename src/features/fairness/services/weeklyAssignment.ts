@@ -27,7 +27,7 @@ export async function computeWeeklyAssignmentPreview(
 
   const { data: poolTasks, error: poolError } = await supabase
     .from("tasks")
-    .select("id, title, size")
+    .select("id, title, size, sunday_allowed")
     .eq("is_random_pool", true)
     .is("assigned_profile_id", null)
     .is("completed_at", null);
@@ -56,17 +56,30 @@ export async function computeWeeklyAssignmentPreview(
     })),
   });
 
-  // Spread same-week tasks across the 7 days instead of piling them all
-  // onto the week's last day.
+  // Spread same-week tasks across the week's days instead of piling them
+  // all onto the last one. Tasks marked "not on Sunday" (e.g. loud chores
+  // like vacuuming) cycle through Monday-Saturday only.
   const weekStart = new Date(`${weekStartDate}T00:00:00`);
-  const items = (poolTasks ?? []).map((task, index) => ({
-    taskId: task.id,
-    title: task.title,
-    size: task.size as TaskSize,
-    points: SIZE_POINTS[task.size as TaskSize],
-    assignedProfileId: assignment[task.id],
-    dueDate: toISODate(addDays(weekStart, index % 7)),
-  }));
+  const anyDayOffsets = [0, 1, 2, 3, 4, 5, 6];
+  const noSundayOffsets = [0, 1, 2, 3, 4, 5];
+  let anyDayIndex = 0;
+  let noSundayIndex = 0;
+
+  const items = (poolTasks ?? []).map((task) => {
+    const sundayAllowed = task.sunday_allowed ?? true;
+    const offset = sundayAllowed
+      ? anyDayOffsets[anyDayIndex++ % anyDayOffsets.length]
+      : noSundayOffsets[noSundayIndex++ % noSundayOffsets.length];
+
+    return {
+      taskId: task.id,
+      title: task.title,
+      size: task.size as TaskSize,
+      points: SIZE_POINTS[task.size as TaskSize],
+      assignedProfileId: assignment[task.id],
+      dueDate: toISODate(addDays(weekStart, offset)),
+    };
+  });
 
   return { weekStartDate, weekEndDate, items };
 }

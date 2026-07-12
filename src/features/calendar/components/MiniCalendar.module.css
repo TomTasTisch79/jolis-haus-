@@ -123,3 +123,12 @@
   font: var(--font-footnote);
   color: var(--color-text-secondary);
 }
+
+.goldBanner {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, #f7d774, #d4af37);
+  color: #3a2e00;
+  font: var(--font-headline);
+  text-align: center;
+}

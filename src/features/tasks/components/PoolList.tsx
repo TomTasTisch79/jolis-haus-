@@ -163,6 +163,7 @@ export function PoolList() {
                 recurrenceRule: null,
                 assignedProfileId: null,
                 isRandomPool: true,
+                sundayAllowed: true,
               }}
               onSubmit={handleCreate}
               onCancel={() => setIsCreating(false)}
@@ -184,6 +185,7 @@ export function PoolList() {
                 recurrenceRule: editingTask.recurrence_rule,
                 assignedProfileId: editingTask.assigned_profile_id,
                 isRandomPool: editingTask.is_random_pool,
+                sundayAllowed: editingTask.sunday_allowed,
               }}
               onSubmit={(values) => handleUpdate(editingTask.id, values)}
               onCancel={() => setEditingTask(null)}

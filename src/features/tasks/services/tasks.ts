@@ -42,6 +42,7 @@ export async function createTask(input: TaskInput, createdBy: string): Promise<T
       recurrence_rule: input.recurrenceRule,
       assigned_profile_id: input.isRandomPool ? null : input.assignedProfileId,
       is_random_pool: input.isRandomPool,
+      sunday_allowed: input.sundayAllowed,
       created_by: createdBy,
     })
     .select()
@@ -63,6 +64,7 @@ export async function updateTask(id: string, input: TaskInput): Promise<void> {
       recurrence_rule: input.recurrenceRule,
       assigned_profile_id: input.isRandomPool ? null : input.assignedProfileId,
       is_random_pool: input.isRandomPool,
+      sunday_allowed: input.sundayAllowed,
     })
     .eq("id", id);
 
@@ -96,7 +98,11 @@ export async function completeTask(task: Task, completedByProfileId: string): Pr
     // fairness run picks them up and sets a fresh due date.
     const nextDueDate = task.is_random_pool
       ? null
-      : computeNextDueDate(task.due_date ?? completedAt.slice(0, 10), task.recurrence_rule);
+      : computeNextDueDate(
+          task.due_date ?? completedAt.slice(0, 10),
+          task.recurrence_rule,
+          task.sunday_allowed
+        );
 
     const { error: insertError } = await supabase.from("tasks").insert({
       title: task.title,
@@ -109,6 +115,7 @@ export async function completeTask(task: Task, completedByProfileId: string): Pr
       is_random_pool: task.is_random_pool,
       assigned_profile_id: task.is_random_pool ? null : task.assigned_profile_id,
       created_by: task.created_by,
+      sunday_allowed: task.sunday_allowed,
     });
 
     if (insertError) throw insertError;

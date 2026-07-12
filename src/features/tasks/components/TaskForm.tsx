@@ -32,6 +32,7 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
   const [dueDate, setDueDate] = useState(initial?.dueDate ?? "");
   const [assignedProfileId, setAssignedProfileId] = useState(initial?.assignedProfileId ?? "");
   const [isRandomPool, setIsRandomPool] = useState(initial?.isRandomPool ?? false);
+  const [sundayAllowed, setSundayAllowed] = useState(initial?.sundayAllowed ?? true);
   const [recurrenceType, setRecurrenceType] = useState<RecurrenceType>(
     ruleToType(initial?.recurrenceRule ?? null)
   );
@@ -71,6 +72,7 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
       recurrenceRule: buildRecurrenceRule(),
       assignedProfileId: isRandomPool ? null : assignedProfileId,
       isRandomPool,
+      sundayAllowed,
     });
     setIsSubmitting(false);
   }
@@ -265,6 +267,30 @@ export function TaskForm({ initial, onSubmit, onCancel }: TaskFormProps) {
           ))}
         </div>
       )}
+
+      <div className={styles.field}>
+        <span className={styles.label} id={`${formId}-sunday-label`}>
+          Auch sonntags einplanen?
+        </span>
+        <div className={styles.segmented} role="group" aria-labelledby={`${formId}-sunday-label`}>
+          <button
+            type="button"
+            aria-pressed={sundayAllowed}
+            className={`${styles.segmentButton} ${sundayAllowed ? styles.segmentButtonSelected : ""}`}
+            onClick={() => setSundayAllowed(true)}
+          >
+            Ja
+          </button>
+          <button
+            type="button"
+            aria-pressed={!sundayAllowed}
+            className={`${styles.segmentButton} ${!sundayAllowed ? styles.segmentButtonSelected : ""}`}
+            onClick={() => setSundayAllowed(false)}
+          >
+            Nein (zu laut)
+          </button>
+        </div>
+      </div>
 
       <div className={styles.actions}>
         <button type="button" className={styles.cancelButton} onClick={onCancel}>

@@ -164,6 +164,7 @@ export function TaskList() {
                       recurrenceRule: null,
                       assignedProfileId: currentProfileId,
                       isRandomPool: false,
+                      sundayAllowed: true,
                     }
                   : undefined
               }
@@ -187,6 +188,7 @@ export function TaskList() {
                 recurrenceRule: editingTask.recurrence_rule,
                 assignedProfileId: editingTask.assigned_profile_id,
                 isRandomPool: editingTask.is_random_pool,
+                sundayAllowed: editingTask.sunday_allowed,
               }}
               onSubmit={(values) => handleUpdate(editingTask.id, values)}
               onCancel={() => setEditingTask(null)}

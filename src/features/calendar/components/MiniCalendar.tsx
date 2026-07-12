@@ -72,6 +72,9 @@ export function MiniCalendar() {
 
   const selectedTasks = tasksByDate.get(selectedDate) ?? [];
 
+  const weekTasks = weekDates.flatMap((date) => tasksByDate.get(date) ?? []);
+  const allWeekTasksCompleted = weekTasks.length > 0 && weekTasks.every((task) => task.completed_at);
+
   return (
     <div className={styles.card}>
       <div className={styles.header}>
@@ -152,6 +155,10 @@ export function MiniCalendar() {
           </div>
         ))}
       </div>
+
+      {allWeekTasksCompleted && (
+        <div className={styles.goldBanner}>🎉 Alle Aufgaben für die Woche abgeschlossen!</div>
+      )}
     </div>
   );
 }
