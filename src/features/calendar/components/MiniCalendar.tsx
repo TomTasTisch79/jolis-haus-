@@ -9,6 +9,20 @@ import type { Task } from "@/features/tasks/types";
 import styles from "./MiniCalendar.module.css";
 
 const WEEKDAY_LABELS = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+const MONTH_LABELS = [
+  "Januar",
+  "Februar",
+  "März",
+  "April",
+  "Mai",
+  "Juni",
+  "Juli",
+  "August",
+  "September",
+  "Oktober",
+  "November",
+  "Dezember",
+];
 
 export function MiniCalendar() {
   const { tasks, isLoading: tasksLoading } = useAllTasks();
@@ -23,6 +37,14 @@ export function MiniCalendar() {
     () => Array.from({ length: 7 }, (_, i) => toISODate(addDays(weekStart, i))),
     [weekStart]
   );
+
+  const monthLabel = useMemo(() => {
+    const weekEnd = addDays(weekStart, 6);
+    if (weekStart.getMonth() === weekEnd.getMonth()) {
+      return `${MONTH_LABELS[weekStart.getMonth()]} ${weekStart.getFullYear()}`;
+    }
+    return `${MONTH_LABELS[weekStart.getMonth()]} / ${MONTH_LABELS[weekEnd.getMonth()]} ${weekEnd.getFullYear()}`;
+  }, [weekStart]);
 
   const categoryById = useMemo(
     () => new Map(categories?.map((category) => [category.id, category])),
@@ -60,7 +82,7 @@ export function MiniCalendar() {
         >
           ‹
         </button>
-        <span className={styles.headerLabel}>Kalender</span>
+        <span className={styles.headerLabel}>{monthLabel}</span>
         <button
           className={styles.navButton}
           onClick={() => setWeekStart((current) => addDays(current, 7))}
